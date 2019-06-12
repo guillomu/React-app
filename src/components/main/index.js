@@ -67,21 +67,30 @@ export default class Main extends React.Component {
             className="loginForm"
           >
             <h1 className="h3 mb-3 font-weight-normal">{title}</h1>
-            <label>Username: </label>
+            <label htmlFor="username" className="sr-only">
+              Username
+            </label>
             <input
-              className="form-control"
+              className="form-control mb-3"
               name="username"
               type="text"
               value={this.state.username}
               onChange={e => this.handleChange(e)}
+              placeholder="Username"
+              required
+              autoFocus
             />
-            <label>Password: </label>
+            <label htmlFor="password" className="sr-only">
+              Password
+            </label>
             <input
-              className="form-control"
+              className="form-control mb-3"
               name="password"
               type="password"
               value={this.state.password}
               onChange={e => this.handleChange(e)}
+              placeholder="Password"
+              required
             />
             <div className="checkbox mb-3">
               <label>

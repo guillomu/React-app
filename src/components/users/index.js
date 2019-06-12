@@ -16,7 +16,8 @@ export default class Users extends React.Component {
           age: 25,
           email: "thomas@email.com",
           isAdmin: false,
-          role: "guest"
+          role: "guest",
+          active: false
         },
         {
           firstname: "Xavier",
@@ -24,15 +25,17 @@ export default class Users extends React.Component {
           age: 28,
           email: "xavier@email.com",
           isAdmin: true,
-          role: "admin"
+          role: "admin",
+          active: true
         },
         {
           firstname: "Paul",
           lastname: "Moulin",
           age: 19,
-          email: "thomas@email.com",
+          email: "paul@email.com",
           isAdmin: true,
-          role: "admin"
+          role: "admin",
+          active: false
         },
         {
           firstname: "Michel",
@@ -40,10 +43,10 @@ export default class Users extends React.Component {
           age: 32,
           email: "michel@email.com",
           isAdmin: false,
-          role: "guest"
+          role: "guest",
+          active: false
         }
-      ],
-      currentUser: ""
+      ]
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -61,10 +64,23 @@ export default class Users extends React.Component {
             email: "email@email.com",
             isAdmin: false
           }
-        ],
-        currentUser: this.props.firstname
+        ]
       }));
     }
+  }
+
+  handleLogin(user) {
+    let newUsersState = this.state.users.map(stateUser => {
+      stateUser.active = false;
+      if (stateUser.email === user.email) {
+        stateUser.active = true;
+      }
+      return stateUser;
+    });
+
+    this.setState({
+      users: newUsersState
+    });
   }
 
   render() {
@@ -78,33 +94,53 @@ export default class Users extends React.Component {
           email={user.email}
           age={user.age}
           isAdmin={user.isAdmin}
+          role={user.role}
+          active={user.active}
+          handleLogin={() => this.handleLogin(user)}
         />
       );
     });
 
+    //slice() renvoie un sous tableau couper par rapport au indices donnés
+    // eslint-disable-next-line
     var firstHalfUsers = UsersList.slice(0, this.state.users.length / 2);
 
+    // eslint-disable-next-line
     var secondHalfUsers = UsersList.slice(this.state.users.length / 2);
 
+    //find() retourne un seul element correspondant à une condition
+    // eslint-disable-next-line
     let superUser = this.state.users.find(user => {
       return user.isAdmin;
     });
 
+    //filter() retourne un tableau de tous les elements correspondant à une condition
+    var guestUsers = UsersList.filter(user => {
+      return user.props.role === "guest";
+    });
+
+    var adminUsers = UsersList.filter(user => {
+      return user.props.role === "admin";
+    });
+
+    var currentUser = UsersList.find(user => {
+      return user.props.active;
+    });
+
+    console.log(currentUser);
     return (
       <div>
+        {currentUser && (
+          <div className="currentUser">
+            <h4>Current User</h4>
+            <ul>{currentUser}</ul>
+          </div>
+        )}
+        <br />
         <h3>Guest Users</h3>
-        <ul>{firstHalfUsers}</ul>
+        <ul>{guestUsers}</ul>
         <h3>Admin Users</h3>
-        <ul>{secondHalfUsers}</ul>
-        <div className="superuser">
-          <h3>Admin</h3>
-          <ul>
-            <li>
-              {superUser.firstname} {superUser.lastname} - {superUser.age}ans -
-              {superUser.email}
-            </li>
-          </ul>
-        </div>
+        <ul>{adminUsers}</ul>
       </div>
     );
   }
