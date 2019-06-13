@@ -26,7 +26,7 @@ export default class Users extends React.Component {
           email: "xavier@email.com",
           isAdmin: true,
           role: "admin",
-          active: true
+          active: false
         },
         {
           firstname: "Paul",
@@ -54,18 +54,16 @@ export default class Users extends React.Component {
 
   componentDidMount() {
     if (this.props.firstname) {
-      this.setState(prevState => ({
-        users: [
-          ...prevState.users,
-          {
-            firstname: this.props.firstname,
-            lastname: "dupont",
-            age: 24,
-            email: "email@email.com",
-            isAdmin: false
-          }
-        ]
-      }));
+      let newUsersState = this.state.users.map(stateUser => {
+        if (stateUser.firstname === this.props.firstname) {
+          stateUser.active = true;
+        }
+        return stateUser;
+      });
+
+      this.setState({
+        users: newUsersState
+      });
     }
   }
 
